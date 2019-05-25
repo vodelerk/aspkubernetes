@@ -47,6 +47,7 @@ namespace MVCRegister.Controllers
             return View(employee);
         }
 
+       
         // GET: Employee/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
@@ -65,8 +66,20 @@ namespace MVCRegister.Controllers
             return View(employee);
         }
 
-        
+        // POST: Employee/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var employee = await _context.Employees.FindAsync(id);
+            _context.Employees.Remove(employee);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
 
-        
+        private bool EmployeeExists(int id)
+        {
+            return _context.Employees.Any(e => e.EmployeeId == id);
+        }
     }
 }
