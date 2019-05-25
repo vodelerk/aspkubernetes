@@ -28,7 +28,12 @@ namespace MVCRegister.Controllers
         // GET: Employee/Create
         public IActionResult AddOrEdit(int id=0)
         {
-            return View(new Employee());
+            if(id==0)
+                return View(new Employee());
+            else
+            {
+                return View(_context.Employees.Find(id));
+            }
         }
 
         // POST: Employee/Create
@@ -40,7 +45,10 @@ namespace MVCRegister.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(employee);
+                if(employee.EmployeeId==0)
+                    _context.Add(employee);
+                else
+                    _context.Update(employee);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
